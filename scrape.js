@@ -67,7 +67,7 @@ let scrape = async() =>{
             let price = element.childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].childNodes[1].childNodes[0].textContent;// Select the title
             info = info.replace(/\n|\r/g, "");
             test = info.split("|");
-            if(test.length>0){
+            if(test.length > 1){
                 let milage = test[1].trim();
                 let age = test[0].trim();
                 data.push({url, name, img_url, age, milage, price});
