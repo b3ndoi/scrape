@@ -67,13 +67,19 @@ let scrape = async() =>{
             let price = element.childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].childNodes[1].childNodes[0].textContent;// Select the title
             info = info.replace(/\n|\r/g, "");
             test = info.split("|");
-            let milage = test[1].trim();
-            let age = test[0].trim();
+            if(test.length>0){
+                let milage = test[1].trim();
+                let age = test[0].trim();
+                data.push({url, name, img_url, age, milage, price});
+            }else{
+                data.push({url, name, img_url, info, price});
+            }
+            
             // // let price = element.childNodes[7].children[0].innerText; // Select the price
             // let url_article = container.section.a['href']
             // let img_url = container.img['src']
             // let article_name = container.findAll("div", {"class":"heading-container"})[0].a.span.text
-            data.push({url, name, img_url, age, milage, price}); // Push an object with the data onto our array
+             // Push an object with the data onto our array
         }
         
 
