@@ -24,19 +24,19 @@ const single =  async(url)=>{
         console.log(elements);
             
             var rows = elements[0].rows;
-            
+            let contact = {}
             for (let index = 0; index < rows.length; index++) {
                 
                 if(rows[index].cells[0].innerText == "Telefon" || rows[index].cells[0].innerText == "phone"){
-                    data.push({
-                        'telefon': rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
-                    })
+                    
+                        contact[rows[index].cells[0].innerText.replace(/ /g, "_")] = rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
+                    
                 }
             }
             
         
-        if(data.length > 0){
-            return data[0]; // Return our data array
+        if(contact){
+            return contact; // Return our data array
         }else{
             return {
                 message:"No telefon"
