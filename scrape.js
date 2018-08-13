@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 const single =  async(url)=>{
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
     // let pages = await browser.pages();
     
     const page = await browser.newPage();
@@ -22,14 +22,21 @@ const single =  async(url)=>{
         let elements = document.querySelectorAll('.contactList');
          // Select all Products
         console.log(elements);
-        
-            let phone = elements[0].childNodes[1]// Select the title
+            
+            var rows = elements[0].rows;
+            
+            for (let index = 0; index < rows.length; index++) {
+                
+                if(rows[index].cells[0].innerText == "Telefon"){
+                    data.push({
+                        'telefon':rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
+                    })
+                }
+            }
             
         
 
-        return {
-            'phone':phone
-        }; // Return our data array
+        return data[0]; // Return our data array
     });
     browser.close();
     return result;
