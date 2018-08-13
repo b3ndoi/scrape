@@ -17,7 +17,6 @@ const single =  async(url)=>{
         waitLoad: true, 
         waitNetworkIdle: true // defaults to false
       });
-    await page.waitForNavigation();
     
     await page.waitFor(2000);
     // await page.click('#default > div > div > div > div > section > div:nth-child(2) > ol > li:nth-child(1) > article > div.image_container > a > img');
