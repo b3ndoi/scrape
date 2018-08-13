@@ -17,7 +17,7 @@ const single =  async(url)=>{
     await page.goto(url);
     await page.waitFor(2000);
     // await page.click('#default > div > div > div > div > section > div:nth-child(2) > ol > li:nth-child(1) > article > div.image_container > a > img');
-    const result = await page.evaluate(() => {
+    let result = await page.evaluate(() => {
         let data = []; // Create an empty array that will store our data
         let elements = document.querySelectorAll('.contactList');
          // Select all Products
@@ -29,7 +29,7 @@ const single =  async(url)=>{
                 
                 if(rows[index].cells[0].innerText == "Telefon" || rows[index].cells[0].innerText == "phone"){
                     data.push({
-                        'telefon':rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
+                        'telefon': rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
                     })
                 }
             }
@@ -43,6 +43,40 @@ const single =  async(url)=>{
             }
         }
     });
+
+    result = await page.once('load', () => 
+
+    {
+
+        let data = []; // Create an empty array that will store our data
+        let elements = document.querySelectorAll('.contactList');
+         // Select all Products
+        console.log(elements);
+            
+            var rows = elements[0].rows;
+            
+            for (let index = 0; index < rows.length; index++) {
+                
+                if(rows[index].cells[0].innerText == "Telefon" || rows[index].cells[0].innerText == "phone"){
+                    data.push({
+                        'telefon': rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
+                    })
+                }
+            }
+            
+        
+        if(data.length > 0){
+            return data[0]; // Return our data array
+        }else{
+            return {
+                message:"No telefon"
+            }
+        }
+
+    }
+
+    );
+
     browser.close();
     return result;
 };
