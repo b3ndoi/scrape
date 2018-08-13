@@ -9,13 +9,12 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 const single =  async(url)=>{
-    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    const browser = await puppeteer.launch({headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox']});
     // let pages = await browser.pages();
     
     const page = await browser.newPage();
 
-    await page.goto(url, {waitLoad: true, 
-        waitNetworkIdle: true});
+    await page.goto(url, {"waitUntil" : "networkidle0"});
     await page.waitFor(2000);
     // await page.click('#default > div > div > div > div > section > div:nth-child(2) > ol > li:nth-child(1) > article > div.image_container > a > img');
     let result = await page.evaluate(() => {
