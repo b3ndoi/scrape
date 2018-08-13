@@ -111,7 +111,7 @@ let scrape = async(query) =>{
 
 app.get('/', (req, res) => {
     var query = '?page='+req.query.page+'&DEALER='+req.query.DEALER+'&PRICE_FROM='+req.query.PRICE_FROM+'&PRICE_TO='+req.query.PRICE_TO;
-    scrape().then((value) => {
+    scrape(query).then((value) => {
         res.send(value)       
     })
 
