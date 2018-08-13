@@ -92,6 +92,8 @@ app.get('/', (req, res) => {
 
     scrape().then((value) => {
         res.send( value)       
+    }).catch(err=>{
+        res.send(err)
     })
 
 })
