@@ -27,7 +27,7 @@ const single =  async(url)=>{
             
             for (let index = 0; index < rows.length; index++) {
                 
-                if(rows[index].cells[0].innerText == "Telefon"){
+                if(rows[index].cells[0].innerText == "Telefon" || rows[index].cells[0].innerText == "phone"){
                     data.push({
                         'telefon':rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
                     })
@@ -62,8 +62,8 @@ let scrape = async() =>{
             // // Loop through each proudct
             let url = element.childNodes[1].childNodes[1].href;
             let img_url = element.childNodes[1].childNodes[1].childNodes[1].src; 
-            let name = elements[0].childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent; 
-            let info = elements[0].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent; 
+            let name = element.childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent; 
+            let info = element.childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent; 
             let price = element.childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].childNodes[1].childNodes[0].textContent;// Select the title
             info = info.replace(/\n|\r/g, "");
             test = info.split("|");
