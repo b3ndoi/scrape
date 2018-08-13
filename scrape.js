@@ -106,9 +106,14 @@ app.get('/', (req, res) => {
 
 app.post('/single', function(req, res) {
     var url = req.body.url;
+    console.log(url)
     single(url).then((value)=>{
+        console.log(value);
         res.send(value);
 
+    }).catch(err => {
+        res.send(err);
+        
     });
     
 });
