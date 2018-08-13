@@ -92,8 +92,6 @@ app.get('/', (req, res) => {
 
     scrape().then((value) => {
         res.send( value)       
-    }).catch(err=>{
-        res.send(err)
     })
 
 })
@@ -101,9 +99,11 @@ app.get('/', (req, res) => {
 
 app.post('/single', function(req, res) {
     var url = req.body.url;
-    let contactResponse = single(url);
+    single(url).then((value)=>{
+        res.send(value);
+
+    });
     
-    res.send(contactResponse);
 });
 
 
