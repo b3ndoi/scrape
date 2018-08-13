@@ -35,8 +35,14 @@ const single =  async(url)=>{
             }
             
         
+        if(data.length > 0){
+            return data[0]; // Return our data array
 
-        return data[0]; // Return our data array
+        }else{
+            return {
+                message:"No telefon"
+            }
+        }
     });
     browser.close();
     return result;
