@@ -15,7 +15,7 @@ const single =  async(url)=>{
     const page = await browser.newPage();
 
     await page.goto(url);
-    await page.waitFor(1000);
+    await page.waitFor(2000);
     // await page.click('#default > div > div > div > div > section > div:nth-child(2) > ol > li:nth-child(1) > article > div.image_container > a > img');
     const result = await page.evaluate(() => {
         let data = []; // Create an empty array that will store our data
@@ -37,7 +37,6 @@ const single =  async(url)=>{
         
         if(data.length > 0){
             return data[0]; // Return our data array
-
         }else{
             return {
                 message:"No telefon"
