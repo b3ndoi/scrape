@@ -37,7 +37,7 @@ const single =  async(url)=>{
 
 
 let scrape = async() =>{
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch({headless: true});
     // let pages = await browser.pages();
     const page = await browser.newPage();
 
