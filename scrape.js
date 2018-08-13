@@ -9,7 +9,8 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 const single =  async(url)=>{
-    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], waitUntil: 'networkidle0'});
+    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'],  waitLoad: true, 
+    waitNetworkIdle: true});
     // let pages = await browser.pages();
     
     const page = await browser.newPage();
