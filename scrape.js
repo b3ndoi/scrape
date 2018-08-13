@@ -98,7 +98,7 @@ let scrape = async() =>{
 app.get('/', (req, res) => {
 
     scrape().then((value) => {
-        res.send( value)       
+        res.send(value)       
     })
 
 })
@@ -115,7 +115,7 @@ app.post('/single', function(req, res) {
 
 
 
-app.listen(port, () => console.log('Example app listening on port 3000!'))
+app.listen(port, () => console.log('Example app listening on port '+port+'!'))
 
 // single('https://mobile.willhaben.at/gebrauchtwagen/d/auto/skoda-octavia-skoda-octavia-combi-mit-neuer-kupplung-bremsen-263323237/?sid=1533912326541').then((value)=>{
 //     console.log(value)
