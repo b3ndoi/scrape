@@ -27,11 +27,12 @@ const single =  async(url)=>{
             let contact = {}
             for (let index = 0; index < rows.length; index++) {
                 
-                if(rows[index].cells[0].innerText == "Telefon" || rows[index].cells[0].innerText == "phone"){
+                // if(rows[index].cells[0].innerText == "Telefon" || rows[index].cells[0].innerText == "phone"){
                     
-                        contact[rows[index].cells[0].innerText.replace(/ /g, "_")] = rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
+                //         contact[rows[index].cells[0].innerText.replace(/ /g, "_")] = rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
                     
-                }
+                // }
+                contact[rows[index].cells[0].innerText.replace(/ /g, "_").toLowerCase()] = rows[index].cells[1].innerText.replace(/\n|\r/g, "")                 
             }
             
         
@@ -108,7 +109,7 @@ let scrape = async() =>{
 };
 
 app.get('/', (req, res) => {
-
+    var query = '?page='+req.query.page+'&DEALER='+req.query.DEALER+'&PRICE_FROM='+req.query.PRICE_FROM+'&PRICE_TO='+req.query.PRICE_TO;
     scrape().then((value) => {
         res.send(value)       
     })
