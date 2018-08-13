@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 const single =  async(url)=>{
-    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], waitUntil: 'networkidle0'});
     // let pages = await browser.pages();
     
     const page = await browser.newPage();
@@ -43,39 +43,6 @@ const single =  async(url)=>{
             }
         }
     });
-
-    result = await page.once('load', () => 
-
-    {
-
-        let data = []; // Create an empty array that will store our data
-        let elements = document.querySelectorAll('.contactList');
-         // Select all Products
-        console.log(elements);
-            
-            var rows = elements[0].rows;
-            
-            for (let index = 0; index < rows.length; index++) {
-                
-                if(rows[index].cells[0].innerText == "Telefon" || rows[index].cells[0].innerText == "phone"){
-                    data.push({
-                        'telefon': rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
-                    })
-                }
-            }
-            
-        
-        if(data.length > 0){
-            return data[0]; // Return our data array
-        }else{
-            return {
-                message:"No telefon"
-            }
-        }
-
-    }
-
-    );
 
     browser.close();
     return result;
