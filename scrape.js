@@ -2,6 +2,10 @@ const express = require('express')
 const app = express();
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
+
+const devices = require('puppeteer/DeviceDecriptors');
+const iPhone = devices['iPhone 6'];
+
 let port = process.env.PORT || 3000;
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
