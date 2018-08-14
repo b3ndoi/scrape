@@ -1,9 +1,10 @@
+var fs = require('fs');
+var cheerio = require('cheerio');
+var base64 = require('base-64');
 const express = require('express')
+const puppeteer = require('puppeteer')
 const app = express();
 const bodyParser = require('body-parser');
-const puppeteer = require('puppeteer');
-
-const devices = require('./devices');
 
 let port = process.env.PORT || 3000;
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -11,59 +12,24 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
 
-const single =  async(url)=>{
-    
-    const iPhone = devices[Math.floor((Math.random() * 66))];
-    
-    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
-    // let pages = await browser.pages();
-    const page = await browser.newPage();
-    await page.emulate(iPhone);
-    await page.goto(url, {
-        waitLoad: true, 
-        waitNetworkIdle: true // defaults to false
-      });
-    
-    await page.waitFor(2000);
-    // await page.click('#default > div > div > div > div > section > div:nth-child(2) > ol > li:nth-child(1) > article > div.image_container > a > img');
-    let result = await page.evaluate(() => {
-        let data = []; // Create an empty array that will store our data
-        let elements = document.querySelectorAll('.contactList');
-         // Select all Products
-        console.log(elements);
-            
-            var rows = elements[0].rows;
-            let contact = {}
-            for (let index = 0; index < rows.length; index++) {
-                
-                // if(rows[index].cells[0].innerText == "Telefon" || rows[index].cells[0].innerText == "phone"){
-                    
-                //         contact[rows[index].cells[0].innerText.replace(/ /g, "_")] = rows[index].cells[1].innerText.replace(/\n|\r/g, "") 
-                    
-                // }
-                contact[rows[index].cells[0].innerText.replace(/ /g, "_").toLowerCase()] = rows[index].cells[1].innerText.replace(/\n|\r/g, "")                 
-            }
-            
-        
-        if(contact){
-            return contact; // Return our data array
-        }else{
-            return {
-                message:"No telefon"
-            }
-        }
-    });
+var request = require('request-promise');
 
-    browser.close();
-    return result;
-};
+var username = 'lum-customer-hl_0354ff9e-zone-static';
+
+var password = 'o65s13jhqhb7';
+var port_p = 22225;
+var user_agent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36';
+var session_id = (1000000 * Math.random())|0;
+var super_proxy = 'http://'+username+'-session-'+session_id+':'+password+'@zproxy.lum-superproxy.io:'+port_p;
+
+const devices = require('./devices');
 
 
 let scrape = async(query) =>{
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
     // let pages = await browser.pages();
     const page = await browser.newPage();
-
+    
     await page.goto('https://mobile.willhaben.at/gebrauchtwagen/auto/gebrauchtwagenboerse/'+query);
     await page.waitFor(1000);
     
@@ -77,6 +43,7 @@ let scrape = async(query) =>{
             // console.log()
             // // Loop through each proudct
             let url = element.childNodes[1].childNodes[1].href;
+            url = url.replace('https', 'http');
             let img_url = element.childNodes[1].childNodes[1].childNodes[1].src; 
             let name = element.childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent; 
             let info = element.childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent; 
@@ -128,17 +95,39 @@ app.get('/', (req, res) => {
 
 app.post('/single', function(req, res) {
     var url = req.body.url;
-    console.log(url)
-    single(url).then((value)=>{
-        console.log(value);
-        res.send(value);
 
-    }).catch(err => {
-        res.send(err);
-        
-    });
+    var options = {
+        url: url,
+        proxy: super_proxy,
+        transform: function (body) {
+            return cheerio.load(body);
+        },
+        headers: {'User-Agent': user_agent},
+    };
+
+    request(options)
+    .then(function(data){ 
+
+    let scripts = data('script');
+    let scriptToDecode='';
+    
+    scriptToDecode = scripts.get()[scripts.length-2].children[0].data;
+    // Finds BaseDecode
+    var re = /\('[A-Za-z0-9+=/._]*'\)/g;
+    // Only Base64
+    var re_v = /[A-Za-z0-9+=/._]*/g;
+    var newtext = scriptToDecode.match(re);
+    var base64EncodedHtml = newtext[0].replace(/\(|\)|'/g,'');
+    var table_html = base64.decode(base64EncodedHtml);
+    var $ = cheerio.load(table_html);
+    var contact = {
+        'telefon':$('.tracking_phoneNumber').get()[0].children[0].data
+    }
+    res.send(contact);
+ }, function(err){ console.error(err); });
     
 });
+
 
 
 
