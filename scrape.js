@@ -3,8 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
 
-const devices = require('puppeteer/DeviceDecriptors');
-const iPhone = devices['iPhone 6'];
+const devices = require('./devices');
 
 let port = process.env.PORT || 3000;
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -13,6 +12,9 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 const single =  async(url)=>{
+    
+    const iPhone = devices[Math.floor((Math.random() * 66))];
+    
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
     // let pages = await browser.pages();
     const page = await browser.newPage();
@@ -140,7 +142,9 @@ app.post('/single', function(req, res) {
 
 
 
-app.listen(port, () => console.log('Example app listening on port '+port+'!'))
+app.listen(port, () =>{ 
+    console.log(devices.length);
+    console.log('Example app listening on port '+port+'!')})
 
 // single('https://mobile.willhaben.at/gebrauchtwagen/d/auto/skoda-octavia-skoda-octavia-combi-mit-neuer-kupplung-bremsen-263323237/?sid=1533912326541').then((value)=>{
 //     console.log(value)
