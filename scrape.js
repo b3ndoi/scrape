@@ -12,7 +12,7 @@ const single =  async(url)=>{
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
     // let pages = await browser.pages();
     const page = await browser.newPage();
-
+    await page.emulate(iPhone);
     await page.goto(url, {
         waitLoad: true, 
         waitNetworkIdle: true // defaults to false
